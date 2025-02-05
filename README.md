@@ -2,14 +2,14 @@
 
  Streamlit App using code from [cqterrain](https://github.com/medicationforall/cqterrain) to generate parametric walkway terrain. 
  
-I created this application https://walkwayterrain.streamlit.app/ to help with the technical barriers and allow for an interactive demo.
+I created this application https://walkwaygenerator.streamlit.app/ to help with the technical barriers and allow for an interactive demo.
 
 The streamlit application allows you to define the dimensions of your walkwy.
 
 
-[![](01.png)](https://walkwayterrain.streamlit.app//)
+[![](01.png)](https://walkwaygenerator.streamlit.app//)
 
-View the demo [walkwayterrain.streamlit.app](https://walkwayterrain.streamlit.app//)
+View the demo [walkwaygenerator.streamlit.app](https://walkwaygenerator.streamlit.app//)
 
 ### Features
 * Modify size and attributes for the walkway
