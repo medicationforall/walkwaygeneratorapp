@@ -1,4 +1,4 @@
-# CadQuery Walkway Terrain - Streamlit Gui
+# CadQuery Walkway Generator - Streamlit Gui
 
  Streamlit App using code from [cqterrain](https://github.com/medicationforall/cqterrain) to generate parametric walkway terrain. 
  

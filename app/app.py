@@ -20,28 +20,23 @@ import glob
 from datetime import datetime
 from pathlib import Path
 import cadquery as cq
-from cqspoolterrain import SpoolCladding, SpoolCladdingGreebled, SpoolCladdingGreebledUnique, PowerStation
+from cqterrain.walkway import Walkway
 from controls import (
     make_sidebar, 
-    make_spool_controls,
-    make_cradle_controls,
-    make_cladding_controls,
-    make_model_controls_cladding,
-    make_model_controls_combined,
-    make_model_controls_cradle,
-    make_model_controls_spool,
+    make_walkway_parameters,
+    make_slot_parameters,
+    make_model_preview_walkway,
     make_code_view
 )
 
 def __make_tabs():
-    power_tab,spool_tab, cradle_tab, cladding_tab, tab_code = st.tabs([
-        "Power Station",
-        "Spool",
-        "Cradle",
-        "Cladding",
+    preview_tab,walkway_tab, slot_tab, tab_code = st.tabs([
+        "File Controls",
+        "Walkway",
+        "slots",
         "Code",
         ])
-    with power_tab:
+    with preview_tab:
         col1, col2, col3, col4 = st.columns(4)
         with col1:
             generate_button = st.button(f'Generate Model')
@@ -52,43 +47,54 @@ def __make_tabs():
         with col4:
             render = st.selectbox(f"Render", ["material", "wireframe"], label_visibility="collapsed", key="model_render")
 
-        make_model_controls_combined(
+        make_model_preview_walkway(
             color1,
             render,
-            export_type
+            export_type,
+            "model_preview_combined"
         )
-    with spool_tab:
-        spool_parameters = make_spool_controls()
+    with walkway_tab:
+        spool_parameters = make_walkway_parameters()
 
-        make_model_controls_spool(
+        make_model_preview_walkway(
             color1,
             render,
             export_type
         )
-    with cradle_tab:
-        cradle_parameters = make_cradle_controls()
 
-        make_model_controls_cradle(
-            color1,
-            render,
-            export_type
-        )
-    with cladding_tab:
-        cladding_parameters = make_cladding_controls()
+    with slot_tab:
+        slot_parameters = make_slot_parameters()
 
-        make_model_controls_cladding(
+        make_model_preview_walkway(
             color1,
             render,
-            export_type
+            export_type,
+            "model_preview_slots"
         )
+    #with cradle_tab:
+        #cradle_parameters = make_cradle_controls()
+
+        #make_model_controls_cradle(
+        #    color1,
+        #    render,
+        #    export_type
+        #)
+    #with cladding_tab:
+        #cladding_parameters = make_cladding_controls()
+
+        #make_model_controls_cladding(
+        #    color1,
+        #    render,
+        #    export_type
+        #)
 
 
     #combine tab parameter into one dictionary
-    parameters = spool_parameters | cradle_parameters | cladding_parameters
+    parameters = spool_parameters | slot_parameters #| cradle_parameters | cladding_parameters
     parameters['export_type'] = export_type
 
-    with tab_code:
-        make_code_view(parameters)
+    #with tab_code:
+    #    make_code_view(parameters)
 
     return parameters
 
@@ -103,115 +109,77 @@ def __generate_model(parameters):
     export_type = parameters['export_type']
     session_id = st.session_state['session_id']
 
-    cladding_type_param = parameters["cladding_type"]
-    cladding_type = SpoolCladding
-    cladding_types = {
-        "plain":SpoolCladding, 
-        "Greebled":SpoolCladdingGreebled, 
-        "Greebled Unique":SpoolCladdingGreebledUnique
-    }
+    #cladding_type_param = parameters["cladding_type"]
+    bp = Walkway()
+    bp.length = parameters["walkway_length"]
+    bp.width = parameters["walkway_width"]
+    bp.height = parameters["walkway_height"]
 
-    if cladding_type_param in cladding_types:
-        cladding_type = cladding_types[cladding_type_param]
-    else:
-        raise Exception(f"Uncrecognized cladding type {cladding_type_param}")
+    walkway_chamfer = parameters["walkway_chamfer"]
 
-    bp_power = PowerStation()
+    if walkway_chamfer > parameters["walkway_height"]:
+        walkway_chamfer = parameters["walkway_height"] - 0.00001
+        st.warning('Walkway Chamfer must be less than walkway height.', icon="⚠️")
 
-    bp_power.bp_spool.height = parameters["spool_height"]
-    bp_power.bp_spool.radius = parameters["spool_radius"]
-    bp_power.bp_spool.cut_radius = parameters["spool_cut_radius"]
-    bp_power.bp_spool.wall_width = parameters["spool_wall_width"]
-    bp_power.bp_spool.internal_wall_width = parameters["spool_internal_wall_width"]
-    bp_power.bp_spool.internal_z_translate = parameters["spool_internal_z_translate"]
+    bp.walkway_chamfer = walkway_chamfer
 
-    bp_power.bp_cladding = cladding_type()
-    bp_power.bp_cladding.seed=parameters["cladding_seed"]
+    bp.render_slots = parameters["render_slots"]
+    bp.slot_length = 3
+    bp.slot_width_padding = 5
+    bp.slot_length_offset = 5
+    bp.slot_width_padding = 4
+    bp.slots_end_margin = 0
 
-    bp_power.render_spool = True
-    bp_power.render_cladding = True
-    bp_power.bp_cladding.count = parameters["cladding_count"]
-    bp_power.bp_cladding.clad_width = parameters["clading_width"]
-    bp_power.bp_cladding.clad_height = parameters["cladding_height"]
-    bp_power.bp_cladding.clad_inset = parameters["cladding_inset"]
+    bp.render_tabs = True
+    bp.tab_chamfer = 4.5
+    bp.tab_height = 2
+    bp.tab_length = 5
 
-    bp_power.render_cradle = True
-    bp_power.bp_cradle.length = parameters["cradle_length"]
-    bp_power.bp_cradle.width = parameters["cradle_width"]
-    bp_power.bp_cradle.height = parameters["cradle_height"]
-    bp_power.bp_cradle.angle = parameters["cradle_angle"]
+    bp.render_rails = True
+    bp.rail_width = 4
+    bp.rail_height = 40
+    bp.rail_chamfer = 28
 
-    bp_power.render_stairs = False
-    bp_power.render_control = False
-    bp_power.render_walkway = False
-    bp_power.render_ladder = False
+    bp.render_rail_slots = True
+    bp.rail_slot_length = 10
+    bp.rail_slot_top_padding = 6
+    bp.rail_slot_length_offset = 12
+    bp.rail_slots_end_margin = 15
+    bp.rail_slot_pointed_inner_height = 7
+    bp.rail_slot_type = 'archpointed'
 
-    bp_power.bp_walk.render_rails = True
-    bp_power.bp_walk.rail_width = 4
-    bp_power.bp_walk.rail_height = 20
-    bp_power.bp_walk.rail_chamfer = 10
+    bp.make()
+    walkway_bridge = bp.build()
 
-    bp_power.bp_walk.render_rail_slots = True
-    bp_power.bp_walk.rail_slot_length = 6
-    bp_power.bp_walk.rail_slot_top_padding = 6
-    bp_power.bp_walk.rail_slot_length_offset = 4
-    bp_power.bp_walk.rail_slots_end_margin = 8
-    bp_power.bp_walk.rail_slot_pointed_inner_height = 7
-    bp_power.bp_walk.rail_slot_type = 'box'
-
-    bp_power.make()
-    power = bp_power.build()
-    spool = bp_power.bp_spool.build()
-
-    cradle_scene = bp_power.bp_cradle.build()
-    cladding_scene = bp_power.build_cladding()
-
-    #create the model file for downloading
-    EXPORT_NAME_SPOOL = 'model_spool'
-    cq.exporters.export(spool,f'{EXPORT_NAME_SPOOL}.{export_type}')
-    cq.exporters.export(spool,'app/static/'+f'{EXPORT_NAME_SPOOL}_{session_id}.stl')
-
-    EXPORT_NAME_CRADLE = 'model_cradle'
-    cq.exporters.export(cradle_scene,f'{EXPORT_NAME_CRADLE}.{export_type}')
-    cq.exporters.export(cradle_scene,'app/static/'+f'{EXPORT_NAME_CRADLE}_{session_id}.stl')
-
-    EXPORT_NAME_CLADDING = 'model_cladding'
-    cq.exporters.export(cladding_scene,f'{EXPORT_NAME_CLADDING}.{export_type}')
-    cq.exporters.export(cladding_scene,'app/static/'+f'{EXPORT_NAME_CLADDING}_{session_id}.stl')
-
-    EXPORT_NAME_COMBINED = 'model_combined'
-    cq.exporters.export(power,f'{EXPORT_NAME_COMBINED}.{export_type}')
-    cq.exporters.export(power,'app/static/'+f'{EXPORT_NAME_COMBINED}_{session_id}.stl')
+    EXPORT_NAME_SPOOL = 'model_walkway'
+    cq.exporters.export(walkway_bridge,f'{EXPORT_NAME_SPOOL}.{export_type}')
+    cq.exporters.export(walkway_bridge,'app/static/'+f'{EXPORT_NAME_SPOOL}_{session_id}.stl')
 
 
 def __make_app():
-    #st.markdown("""
-    #    <style>
-    #           .block-container {
-    ##                padding-top: 1rem;
-    #            }
-    #    </style>
-    #    """, unsafe_allow_html=True)
-
     if st.session_state['init']:
         with st.spinner('Starting Application..'):
             model_parameters = {
-                'spool_height': 60.0, 
-                'spool_radius': 97.5, 
-                'spool_cut_radius': 36.5, 
-                'spool_wall_width': 4.0, 
-                'spool_internal_wall_width': 3.0, 
-                'spool_internal_z_translate': 0.0, 
-                'cradle_length': 150.0, 
-                'cradle_width': 75.0, 
-                'cradle_height': 63.0, 
-                'cradle_angle': 45.0, 
-                'cladding_type':'plain',
-                'cladding_seed':'power!',
-                'cladding_count': 17, 
-                'clading_width': 33.0, 
-                'cladding_height': 5.0, 
-                'cladding_inset': 5.0,
+                'walkway_length': 225.0,
+                'walkway_width': 75.0,
+                'walkway_height': 6.0, 
+                'walkway_chamfer':3,
+                'render_slots':True,
+                #'spool_radius': 97.5, 
+                #'spool_cut_radius': 36.5, 
+                #'spool_wall_width': 4.0, 
+                #'spool_internal_wall_width': 3.0, 
+                #'spool_internal_z_translate': 0.0, 
+                #'cradle_length': 150.0, 
+                #'cradle_width': 75.0, 
+                #'cradle_height': 63.0, 
+                #'cradle_angle': 45.0, 
+                #'cladding_type':'plain',
+                #'cladding_seed':'power!',
+                #'cladding_count': 17, 
+                #'clading_width': 33.0, 
+                #'cladding_height': 5.0, 
+                #'cladding_inset': 5.0,
                 'export_type':'stl'
             }
 
@@ -243,7 +211,7 @@ def __clean_up_static_files():
 
 if __name__ == "__main__":
     st.set_page_config(
-        page_title="Spool Power Generator",
+        page_title="Walkway Generator",
         page_icon="🧊"
     )
     __initialize_session()

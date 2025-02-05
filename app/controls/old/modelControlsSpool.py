@@ -17,7 +17,7 @@ import streamlit.components.v1 as components
 import os
 import time
 
-EXPORT_NAME = 'model_combined'
+EXPORT_NAME = 'model_walkway'
 
 def __stl_preview(color, render):
     # Load and embed the JavaScript file
@@ -52,7 +52,7 @@ def __stl_preview(color, render):
         height = 500
     )
 
-def make_model_controls_combined(
+def make_model_controls_spool(
     color,
     render,
     export_type
@@ -62,10 +62,10 @@ def make_model_controls_combined(
     else:
         with open(f'{EXPORT_NAME}.{export_type}', "rb") as file:
             btn = st.download_button(
-                    label=f"Download Combined {export_type}",
+                    label=f"Download Spool {export_type}",
                     data=file,
                     file_name=f'{EXPORT_NAME}.{export_type}',
                     mime=f"model/{export_type}"
                 )
-    
+
     __stl_preview(color, render)

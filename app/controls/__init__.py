@@ -1,11 +1,6 @@
-from .modelControlsCladding import make_model_controls_cladding
-from .modelControlsCombined import make_model_controls_combined
-from .modelControlsCradle import make_model_controls_cradle
-from .modelControlsSpool import make_model_controls_spool
-
-from .parametersSpool import make_spool_controls
-from .parametersCradle import make_cradle_controls
-from .parametersCladding import make_cladding_controls
+from .modelPreviewWalkway import make_model_preview_walkway
+from .parametersWalkway import make_walkway_parameters
+from .parametersSlots import make_slot_parameters
 
 from .sidebar import  make_sidebar
 from .codeView import make_code_view
