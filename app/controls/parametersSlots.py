@@ -14,7 +14,15 @@
 
 import streamlit as st
 
+
+
 def make_slot_parameters():
+    #bp.render_slots = True
+    #bp.slot_length = 3
+    #bp.slot_width_padding = 5
+    #bp.slot_length_offset = 5
+    #bp.slots_end_margin = 0
+
     col1, col2, col3 = st.columns(3)
     with col1:
         render_slots = st.toggle(
@@ -22,77 +30,54 @@ def make_slot_parameters():
             key="render_slots",
             value=True
         )
-        #slot_length = st.number_input(
-        #    "length",
-        #    key="slot_length",
-        #    help='"Length" of the walkway',
-        #    min_value=10.0, 
-        #    max_value=500.0, 
-        #    value=225.0,
-        #    step=1.0
-        #)
+    with col2:
+        slot_length = st.number_input(
+            "length",
+            key="slot_length",
+            help='"length" of the slots',
+            min_value=0.5, 
+            max_value=150.0, 
+            value=3.0,
+            step=1.0
+        )
 
-    #with col2:
-    #    slot_width = st.number_input(
-    #        "width",
-    #        key="slot_width",
-    #        help='"Width" of the walkway',
-    #        min_value=10.0, 
-    #        max_value=500.0, 
-    #        value=75.0,
-    #        step=1.0
-    #    )
+    with col3:
+        slot_width_padding = st.number_input(
+            "width padding",
+            key="slot_width_padding",
+            help='"spacer width padding from the sides',
+            min_value=0.5, 
+            max_value=200.0, 
+            value=4.0,
+            step=1.0
+        )
 
-    #with col3:
-    #    slot_height = st.number_input(
-    #        "height",
-    #        key="slot_height",
-    #        help='"Height" of the walkway',
-    #        min_value=1.0, 
-    #        max_value=300.0, 
-    #        value=6.0 ,
-    #        step=1.0
-    #    )
-
-    #col1, col2, col3 = st.columns(3)    
-    #with col1:
-    #    slot_chamfer = st.number_input(
-    #        "Chamfer",
-    #        key="slot_chamfer",
-    #        help='Must be less than Height',
-    #        min_value=0.25, 
-    ##        max_value=100.00, 
-    #        value=3.0,
-    #        step=0.25
-    #    )
-    #with col2:
-    #    spool_internal_wall_width = st.number_input(
-    #        "internal width",
-    #        key="spool_internal_wall_width",
-    #        min_value=1.0, 
-    #        max_value=100.0, 
-    #        value=3.0,
-    #        step=1.0
-    #    )
-    #with col3:
-    #    spool_internal_z_translate = st.number_input(
-    #        "z translate",
-    #        key="spool_internal_z_translate",
-    #        min_value=-100.0, 
-    ##        max_value=100.0, 
-    #        value=0.0,
-    #        step=1.0
-    #    )
-
+    col1, col2, col3 = st.columns(3)    
+    with col1:
+        slot_length_offset = st.number_input(
+            "length offset",
+            key="slot_length_offset",
+            help='length offset between the slots',
+            min_value=0.25, 
+            max_value=300.00, 
+            value=5.0,
+            step=1.0
+        )
+    with col2:
+        slot_end_margin = st.number_input(
+            "end mrgin",
+            key="slot_end_margin",
+            help='Spacer margin from the ends of the walkways',
+            min_value=0.0, 
+            max_value=300.0, 
+            value=0.0,
+            step=1.0
+        )
 
     return {
         'render_slots':render_slots,
-        #'slot_width':slot_width,
-        #'slot_height':slot_height,
-        #'slot_chamfer':slot_chamfer
-        #'spool_radius':spool_radius,
-        #'spool_cut_radius':spool_cut_radius,
-        #'spool_wall_width':spool_wall_width,
-        #'spool_internal_wall_width':spool_internal_wall_width,
-        #'spool_internal_z_translate':spool_internal_z_translate
+        'slot_length':slot_length,
+        'slot_width_padding':slot_width_padding,
+        'slot_length_offset':slot_length_offset,
+        'slot_end_margin':slot_end_margin,
     }

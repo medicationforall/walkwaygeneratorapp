@@ -71,22 +71,6 @@ def __make_tabs():
             export_type,
             "model_preview_slots"
         )
-    #with cradle_tab:
-        #cradle_parameters = make_cradle_controls()
-
-        #make_model_controls_cradle(
-        #    color1,
-        #    render,
-        #    export_type
-        #)
-    #with cladding_tab:
-        #cladding_parameters = make_cladding_controls()
-
-        #make_model_controls_cladding(
-        #    color1,
-        #    render,
-        #    export_type
-        #)
 
 
     #combine tab parameter into one dictionary
@@ -124,11 +108,10 @@ def __generate_model(parameters):
     bp.walkway_chamfer = walkway_chamfer
 
     bp.render_slots = parameters["render_slots"]
-    bp.slot_length = 3
-    bp.slot_width_padding = 5
-    bp.slot_length_offset = 5
-    bp.slot_width_padding = 4
-    bp.slots_end_margin = 0
+    bp.slot_length = parameters["slot_length"]
+    bp.slot_width_padding = parameters["slot_width_padding"]
+    bp.slot_length_offset = parameters["slot_length_offset"]
+    bp.slots_end_margin = parameters["slot_end_margin"]
 
     bp.render_tabs = True
     bp.tab_chamfer = 4.5
@@ -165,6 +148,10 @@ def __make_app():
                 'walkway_height': 6.0, 
                 'walkway_chamfer':3,
                 'render_slots':True,
+                'slot_length':3,
+                'slot_width_padding':5,
+                'slot_length_offset':5,
+                'slot_end_margin':0,
                 #'spool_radius': 97.5, 
                 #'spool_cut_radius': 36.5, 
                 #'spool_wall_width': 4.0, 
