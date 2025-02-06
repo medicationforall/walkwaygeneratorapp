@@ -17,7 +17,12 @@ import streamlit as st
 def make_sidebar():
     with st.sidebar:
         st.title('Walkway Generator')
-        st.markdown("![](https://miniforall.com/image/patreon.png) [Patreon](https://www.patreon.com/medicationforall)")
-        st.markdown("[Mini For All](https://miniforall.com)")
-        st.markdown("[This Apps Code](https://github.com/medicationforall/walkwayterrainapp)")
-        st.markdown("[cqterrain](https://github.com/medicationforall/cqterrain)")
+        st.markdown(
+'''
+* ![](https://miniforall.com/image/patreon_16x16.png) [Patreon](https://www.patreon.com/medicationforall)
+* 💡 [This Apps Code](https://github.com/medicationforall/walkwayterrainapp)
+* 📃 [Walkway Documentation](https://github.com/medicationforall/cqterrain/blob/main/documentation/walkway.md)
+* 🖥️ [cqterrain](https://github.com/medicationforall/cqterrain)
+* ![](https://miniforall.com/image/favicon-16x16.png) [Mini For All](https://miniforall.com)
+'''
+        )
