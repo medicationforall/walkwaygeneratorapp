@@ -27,17 +27,19 @@ from controls import (
     make_slot_parameters,
     make_tab_parameters,
     make_rails_parameters,
+    make_rails_slots_parameters,
     make_model_preview_walkway,
     make_code_view
 )
 
 def __make_tabs():
-    preview_tab,walkway_tab, slot_tab, tab_tab, rails_tab, tab_code = st.tabs([
+    preview_tab,walkway_tab, slot_tab, rails_tab, rails_slots_tab, tab_tab, tab_code = st.tabs([
         "File Controls",
         "Walkway",
         "Slots",
-        "Tabs",
         "Rails",
+        "Rail Slots",
+        "Tabs",
         "Code",
         ])
     with preview_tab:
@@ -106,8 +108,20 @@ def __make_tabs():
             auto_rotate
         )
 
+    with rails_slots_tab:
+        rails_slots_parameters = make_rails_slots_parameters()
+    
+        make_model_preview_walkway(
+            color1,
+            render,
+            export_type,
+            "model_preview_rails_slots",
+            auto_rotate
+        )
+
+
     #combine tab parameter into one dictionary
-    parameters = spool_parameters | slot_parameters | tab_parameters | rails_parameters #| cladding_parameters
+    parameters = spool_parameters | slot_parameters | tab_parameters | rails_parameters | rails_slots_parameters#| cladding_parameters
     parameters['export_type'] = export_type
 
     #with tab_code:
@@ -144,6 +158,7 @@ def __make_app():
                 'rail_width':4,
                 'rail_height':40,
                 'rail_chamfer':28,
+                'render_rails_slots':True,
                 #'spool_radius': 97.5, 
                 #'spool_cut_radius': 36.5, 
                 #'spool_wall_width': 4.0, 
@@ -167,6 +182,11 @@ def __calculate_chamfer(parameters:dict,chamfer:str,check:str):
         chamfer_str = chamfer.replace('_',' ')
         check_str = check.replace('_',' ')
         st.warning(f'{chamfer_str} {parameters[chamfer]} must be less than {check_str} {parameters[check]}.', icon="⚠️")
+    #elif divide_by_two and calulated_chamfer >= (parameters[check])/2:
+    #    calulated_chamfer = 1
+    #    chamfer_str = chamfer.replace('_',' ')
+    #    check_str = check.replace('_',' ')
+    #    st.warning(f'{chamfer_str} {parameters[chamfer]} must be less than {check_str} divided by two {parameters[check]/2}.', icon="⚠️")
     return calulated_chamfer
 
 def __generate_model(parameters):
@@ -200,9 +220,16 @@ def __generate_model(parameters):
     bp.rail_height = parameters['rail_height']
 
     rail_chamfer = __calculate_chamfer(parameters,"rail_chamfer", "rail_height")
+
+    if rail_chamfer >= parameters["walkway_length"]/2:
+        rail_chamfer = parameters["walkway_length"]/2 - 0.00001
+        chamfer_str = "rail_chamfer".replace('_',' ')
+        check_str = "walkway_length".replace('_',' ')
+        st.warning(f'{chamfer_str} {parameters["rail_chamfer"]} must be less than half of {check_str} {parameters["walkway_length"]/2} {rail_chamfer}.', icon="⚠️")
+
     bp.rail_chamfer = rail_chamfer
 
-    bp.render_rail_slots = True
+    bp.render_rail_slots = parameters['render_rails_slots']
     bp.rail_slot_length = 10
     bp.rail_slot_top_padding = 6
     bp.rail_slot_length_offset = 12
