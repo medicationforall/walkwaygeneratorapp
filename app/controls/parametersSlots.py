@@ -1,4 +1,4 @@
-# Copyright 2023 James Adams
+# Copyright 2025 James Adams
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ def make_slot_parameters():
             "width padding",
             key="slot_width_padding",
             help='"spacer width padding from the sides',
-            min_value=0.5, 
+            min_value=0.0, 
             max_value=200.0, 
             value=4.0,
             step=1.0

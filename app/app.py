@@ -1,4 +1,4 @@
-# Copyright 2023 James Adams
+# Copyright 2025 James Adams
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,19 +25,23 @@ from controls import (
     make_sidebar, 
     make_walkway_parameters,
     make_slot_parameters,
+    make_tab_parameters,
+    make_rails_parameters,
     make_model_preview_walkway,
     make_code_view
 )
 
 def __make_tabs():
-    preview_tab,walkway_tab, slot_tab, tab_code = st.tabs([
+    preview_tab,walkway_tab, slot_tab, tab_tab, rails_tab, tab_code = st.tabs([
         "File Controls",
         "Walkway",
-        "slots",
+        "Slots",
+        "Tabs",
+        "Rails",
         "Code",
         ])
     with preview_tab:
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             generate_button = st.button(f'Generate Model')
         with col2:
@@ -46,12 +50,16 @@ def __make_tabs():
             color1 = st.color_picker(f'Model Color', '#E06600', label_visibility="collapsed", key="model_color")
         with col4:
             render = st.selectbox(f"Render", ["material", "wireframe"], label_visibility="collapsed", key="model_render")
+        with col5:
+            auto_rotate_control = st.toggle('Auto Rotate',key="auto_rotaate",value=True)
 
+        auto_rotate = 'true' if auto_rotate_control else 'false'
         make_model_preview_walkway(
             color1,
             render,
             export_type,
-            "model_preview_combined"
+            "model_preview_combined",
+            auto_rotate
         )
     with walkway_tab:
         spool_parameters = make_walkway_parameters()
@@ -59,7 +67,9 @@ def __make_tabs():
         make_model_preview_walkway(
             color1,
             render,
-            export_type
+            export_type,
+            "model_preview_alkway",
+            auto_rotate
         )
 
     with slot_tab:
@@ -69,12 +79,35 @@ def __make_tabs():
             color1,
             render,
             export_type,
-            "model_preview_slots"
+            "model_preview_slots",
+            auto_rotate
         )
 
+    with tab_tab:
+        tab_parameters = make_tab_parameters()
+    
+        make_model_preview_walkway(
+            color1,
+            render,
+            export_type,
+            "model_preview_tabs",
+            auto_rotate
+        )
+
+    
+    with rails_tab:
+        rails_parameters = make_rails_parameters()
+    
+        make_model_preview_walkway(
+            color1,
+            render,
+            export_type,
+            "model_preview_rails",
+            auto_rotate
+        )
 
     #combine tab parameter into one dictionary
-    parameters = spool_parameters | slot_parameters #| cradle_parameters | cladding_parameters
+    parameters = spool_parameters | slot_parameters | tab_parameters | rails_parameters #| cladding_parameters
     parameters['export_type'] = export_type
 
     #with tab_code:
@@ -88,55 +121,6 @@ def __initialize_session():
 
     if "session_id" not in st.session_state:
         st.session_state['session_id'] = uuid4()
-
-def __generate_model(parameters):
-    export_type = parameters['export_type']
-    session_id = st.session_state['session_id']
-
-    #cladding_type_param = parameters["cladding_type"]
-    bp = Walkway()
-    bp.length = parameters["walkway_length"]
-    bp.width = parameters["walkway_width"]
-    bp.height = parameters["walkway_height"]
-
-    walkway_chamfer = parameters["walkway_chamfer"]
-
-    if walkway_chamfer > parameters["walkway_height"]:
-        walkway_chamfer = parameters["walkway_height"] - 0.00001
-        st.warning('Walkway Chamfer must be less than walkway height.', icon="⚠️")
-
-    bp.walkway_chamfer = walkway_chamfer
-
-    bp.render_slots = parameters["render_slots"]
-    bp.slot_length = parameters["slot_length"]
-    bp.slot_width_padding = parameters["slot_width_padding"]
-    bp.slot_length_offset = parameters["slot_length_offset"]
-    bp.slots_end_margin = parameters["slot_end_margin"]
-
-    bp.render_tabs = True
-    bp.tab_chamfer = 4.5
-    bp.tab_height = 2
-    bp.tab_length = 5
-
-    bp.render_rails = True
-    bp.rail_width = 4
-    bp.rail_height = 40
-    bp.rail_chamfer = 28
-
-    bp.render_rail_slots = True
-    bp.rail_slot_length = 10
-    bp.rail_slot_top_padding = 6
-    bp.rail_slot_length_offset = 12
-    bp.rail_slots_end_margin = 15
-    bp.rail_slot_pointed_inner_height = 7
-    bp.rail_slot_type = 'archpointed'
-
-    bp.make()
-    walkway_bridge = bp.build()
-
-    EXPORT_NAME_SPOOL = 'model_walkway'
-    cq.exporters.export(walkway_bridge,f'{EXPORT_NAME_SPOOL}.{export_type}')
-    cq.exporters.export(walkway_bridge,'app/static/'+f'{EXPORT_NAME_SPOOL}_{session_id}.stl')
 
 
 def __make_app():
@@ -152,21 +136,17 @@ def __make_app():
                 'slot_width_padding':5,
                 'slot_length_offset':5,
                 'slot_end_margin':0,
+                'render_tabs':True,
+                'tab_chamfer':4.5,
+                'tab_height':2,
+                'tab_length':5,
+                'render_rails':True,
+                'rail_width':4,
+                'rail_height':40,
+                'rail_chamfer':28,
                 #'spool_radius': 97.5, 
                 #'spool_cut_radius': 36.5, 
                 #'spool_wall_width': 4.0, 
-                #'spool_internal_wall_width': 3.0, 
-                #'spool_internal_z_translate': 0.0, 
-                #'cradle_length': 150.0, 
-                #'cradle_width': 75.0, 
-                #'cradle_height': 63.0, 
-                #'cradle_angle': 45.0, 
-                #'cladding_type':'plain',
-                #'cladding_seed':'power!',
-                #'cladding_count': 17, 
-                #'clading_width': 33.0, 
-                #'cladding_height': 5.0, 
-                #'cladding_inset': 5.0,
                 'export_type':'stl'
             }
 
@@ -180,6 +160,62 @@ def __make_app():
             
     #st.write(st.session_state)
 
+def __calculate_chamfer(parameters:dict,chamfer:str,check:str):
+    calulated_chamfer = parameters[chamfer]
+    if calulated_chamfer >= parameters[check]:
+        calulated_chamfer = parameters[check] - 0.00001
+        chamfer_str = chamfer.replace('_',' ')
+        check_str = check.replace('_',' ')
+        st.warning(f'{chamfer_str} {parameters[chamfer]} must be less than {check_str} {parameters[check]}.', icon="⚠️")
+    return calulated_chamfer
+
+def __generate_model(parameters):
+    export_type = parameters['export_type']
+    session_id = st.session_state['session_id']
+
+    #cladding_type_param = parameters["cladding_type"]
+    bp = Walkway()
+    bp.length = parameters["walkway_length"]
+    bp.width = parameters["walkway_width"]
+    bp.height = parameters["walkway_height"]
+
+    walkway_chamfer = __calculate_chamfer(parameters,"walkway_chamfer", "walkway_height")
+    bp.walkway_chamfer = walkway_chamfer
+
+    bp.render_slots = parameters["render_slots"]
+    bp.slot_length = parameters["slot_length"]
+    bp.slot_width_padding = parameters["slot_width_padding"]
+    bp.slot_length_offset = parameters["slot_length_offset"]
+    bp.slots_end_margin = parameters["slot_end_margin"]
+
+    bp.render_tabs = parameters["render_tabs"]
+
+    tab_chamfer = __calculate_chamfer(parameters,"tab_chamfer", "tab_length")
+    bp.tab_chamfer = tab_chamfer
+    bp.tab_height = parameters["tab_height"]
+    bp.tab_length = parameters["tab_length"]
+
+    bp.render_rails = parameters["render_rails"]
+    bp.rail_width = parameters['rail_width']
+    bp.rail_height = parameters['rail_height']
+
+    rail_chamfer = __calculate_chamfer(parameters,"rail_chamfer", "rail_height")
+    bp.rail_chamfer = rail_chamfer
+
+    bp.render_rail_slots = True
+    bp.rail_slot_length = 10
+    bp.rail_slot_top_padding = 6
+    bp.rail_slot_length_offset = 12
+    bp.rail_slots_end_margin = 15
+    bp.rail_slot_pointed_inner_height = 7
+    bp.rail_slot_type = 'archpointed'
+
+    bp.make()
+    walkway_bridge = bp.build()
+
+    EXPORT_NAME_SPOOL = 'model_walkway'
+    cq.exporters.export(walkway_bridge,f'{EXPORT_NAME_SPOOL}.{export_type}')
+    cq.exporters.export(walkway_bridge,'app/static/'+f'{EXPORT_NAME_SPOOL}_{session_id}.stl')
 
 def __clean_up_static_files():
     files = glob.glob("app/static/model_*.stl")

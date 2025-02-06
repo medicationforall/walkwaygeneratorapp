@@ -73,7 +73,7 @@ class STLViewer extends HTMLElement {
       camera.lookAt(new THREE.Vector3(0,0,0)); 
       //camera.position.x = 10;
 
-      controls.autoRotate = true;
+      controls.autoRotate = {__REPLACE_AUTO_ROTATE__};
       controls.autoRotateSpeed = .5;
       let animate = () => {
         controls.update();

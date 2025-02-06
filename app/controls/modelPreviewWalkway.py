@@ -1,4 +1,4 @@
-# Copyright 2023 James Adams
+# Copyright 2025 James Adams
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import time
 
 EXPORT_NAME = 'model_walkway'
 
-def __stl_preview(color, render):
+def __stl_preview(color, render,auto_rotate='true'):
     # Load and embed the JavaScript file
     with open("js/three.min.js", "r") as js_file:
         three_js = js_file.read()
@@ -35,6 +35,7 @@ def __stl_preview(color, render):
             js_file.read()
             .replace('{__REPLACE_COLOR__}',f'0x{color[1:]}')
             .replace('{__REPLACE_MATERIAL__}',render)
+            .replace('{__REPLACE_AUTO_ROTATE__}',auto_rotate)
         )
         
     session_id = st.session_state['session_id']
@@ -57,6 +58,7 @@ def make_model_preview_walkway(
     render,
     export_type,
     key="download_walkway",
+    auto_rotate='true',
 ):
     if f'{EXPORT_NAME}.{export_type}' not in os.listdir():
         st.error('The program was not able to generate the mesh.', icon="🚨")
@@ -70,4 +72,4 @@ def make_model_preview_walkway(
                     mime=f"model/{export_type}"
                 )
 
-    __stl_preview(color, render)
+    __stl_preview(color, render, auto_rotate)
