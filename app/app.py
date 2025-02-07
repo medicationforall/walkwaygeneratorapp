@@ -121,11 +121,11 @@ def __make_tabs():
 
 
     #combine tab parameter into one dictionary
-    parameters = spool_parameters | slot_parameters | tab_parameters | rails_parameters | rails_slots_parameters#| cladding_parameters
+    parameters:dict = spool_parameters | slot_parameters | tab_parameters | rails_parameters | rails_slots_parameters
     parameters['export_type'] = export_type
 
-    #with tab_code:
-    #    make_code_view(parameters)
+    with tab_code:
+        make_code_view(parameters)
 
     return parameters
 
@@ -165,9 +165,6 @@ def __make_app():
                 'rail_slots_end_margin':15,
                 'rail_slot_pointed_inner_height':7,
                 'rail_slot_type':'archpointed',
-                #'spool_radius': 97.5, 
-                #'spool_cut_radius': 36.5, 
-                #'spool_wall_width': 4.0, 
                 'export_type':'stl'
             }
 

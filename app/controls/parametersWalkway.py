@@ -60,34 +60,10 @@ def make_walkway_parameters():
             value=3.0,
             step=0.25
         )
-    #with col2:
-    #    spool_internal_wall_width = st.number_input(
-    #        "internal width",
-    #        key="spool_internal_wall_width",
-    #        min_value=1.0, 
-    #        max_value=100.0, 
-    #        value=3.0,
-    #        step=1.0
-    #    )
-    #with col3:
-    #    spool_internal_z_translate = st.number_input(
-    #        "z translate",
-    #        key="spool_internal_z_translate",
-    #        min_value=-100.0, 
-    ##        max_value=100.0, 
-    #        value=0.0,
-    #        step=1.0
-    #    )
-
 
     return {
         'walkway_length':walkway_length,
         'walkway_width':walkway_width,
         'walkway_height':walkway_height,
         'walkway_chamfer':walkway_chamfer
-        #'spool_radius':spool_radius,
-        #'spool_cut_radius':spool_cut_radius,
-        #'spool_wall_width':spool_wall_width,
-        #'spool_internal_wall_width':spool_internal_wall_width,
-        #'spool_internal_z_translate':spool_internal_z_translate
     }

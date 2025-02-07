@@ -60,25 +60,10 @@ def make_tab_parameters():
             value=4.5,
             step=1.0
         )
-    #with col2:
-        #slot_end_margin = st.number_input(
-        #    "end mrgin",
-        #    key="slot_end_margin",
-        #    help='Spacer margin from the ends of the walkways',
-        #    min_value=0.0, 
-        #    max_value=300.0, 
-        #    value=0.0,
-        #    step=1.0
-        #)
 
     return {
         'render_tabs':render_tabs,
         'tab_chamfer':tab_chamfer,
         'tab_height':tab_height,
         'tab_length':tab_length
-
-        #'slot_length':slot_length,
-        #'slot_width_padding':slot_width_padding,
-        #'slot_length_offset':slot_length_offset,
-        #'slot_end_margin':slot_end_margin,
     }

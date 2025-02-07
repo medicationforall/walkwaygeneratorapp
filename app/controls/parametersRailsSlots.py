@@ -57,8 +57,6 @@ def make_rails_slots_parameters():
             step=1.0
         )
 
-
-
     col1, col2, col3 = st.columns(3) 
     with col1:
         rail_slot_length_offset = st.number_input(
@@ -99,7 +97,4 @@ def make_rails_slots_parameters():
         'rail_slots_end_margin':rail_slots_end_margin,
         'rail_slot_pointed_inner_height':rail_slot_pointed_inner_height,
         "rail_slot_type":rail_slot_type
-        #'rail_width':rail_width,
-        #'rail_height':rail_height,
-        #'rail_chamfer':rail_chamfer,
     }

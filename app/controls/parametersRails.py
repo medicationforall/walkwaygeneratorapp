@@ -61,16 +61,6 @@ def make_rails_parameters():
             value=28.0,
             step=1.0
         )
-    #with col2:
-        #slot_end_margin = st.number_input(
-        #    "end mrgin",
-        #    key="slot_end_margin",
-        #    help='Spacer margin from the ends of the walkways',
-        #    min_value=0.0, 
-        #    max_value=300.0, 
-        #    value=0.0,
-        #    step=1.0
-        #)
 
     return {
         'render_rails':render_rails,
