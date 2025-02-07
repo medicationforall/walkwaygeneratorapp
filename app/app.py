@@ -159,6 +159,12 @@ def __make_app():
                 'rail_height':40,
                 'rail_chamfer':28,
                 'render_rails_slots':True,
+                'rail_slot_length':10,
+                'rail_slot_top_padding':6,
+                'rail_slot_length_offset':12,
+                'rail_slots_end_margin':15,
+                'rail_slot_pointed_inner_height':7,
+                'rail_slot_type':'archpointed',
                 #'spool_radius': 97.5, 
                 #'spool_cut_radius': 36.5, 
                 #'spool_wall_width': 4.0, 
@@ -230,12 +236,12 @@ def __generate_model(parameters):
     bp.rail_chamfer = rail_chamfer
 
     bp.render_rail_slots = parameters['render_rails_slots']
-    bp.rail_slot_length = 10
-    bp.rail_slot_top_padding = 6
-    bp.rail_slot_length_offset = 12
-    bp.rail_slots_end_margin = 15
-    bp.rail_slot_pointed_inner_height = 7
-    bp.rail_slot_type = 'archpointed'
+    bp.rail_slot_length = parameters['rail_slot_length']
+    bp.rail_slot_top_padding = parameters['rail_slot_top_padding']
+    bp.rail_slot_length_offset = parameters['rail_slot_length_offset']
+    bp.rail_slots_end_margin = parameters['rail_slots_end_margin']
+    bp.rail_slot_pointed_inner_height = parameters['rail_slot_pointed_inner_height']
+    bp.rail_slot_type = parameters['rail_slot_type']
 
     bp.make()
     walkway_bridge = bp.build()

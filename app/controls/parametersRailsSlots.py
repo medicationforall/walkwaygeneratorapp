@@ -23,49 +23,82 @@ def make_rails_slots_parameters():
     #bp.rail_slot_pointed_inner_height = 7
     #bp.rail_slot_type = 'archpointed'
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         render_rails_slots = st.toggle(
             "render rails slots",
             key="render_rails_slots",
             value=True
         )
-    #with col2:
-    #    rail_width = st.number_input(
-    #        "width",
-    #        key="rail_width",
-    #        help='width of the rails',
-    #        min_value=0.25, 
-    #        max_value=300.00, 
-    #        value=4.0,
-    #        step=1.0
-    #    )
-    #with col3:
-    #    rail_height = st.number_input(
-    #        "height",
-    #        key="rail_height",
-    #        help='Height of the rails',
-    #        min_value=0.25, 
-    #        max_value=300.00, 
-    #        value=40.0,
-    #        step=1.0
-    #    )
+    with col2:
+        rail_slot_type = st.selectbox(
+            "type",
+            ('archpointed', 'archround', 'box'), 
+            key="rail_slot_type"
+        )
+    with col3:
+        rail_slot_length = st.number_input(
+            "length",
+            key="rail_slot_length",
+            help='length of the slots',
+            min_value=0.25, 
+            max_value=300.00, 
+            value=10.0,
+            step=1.0
+        )
+    with col4:
+        rail_slot_top_padding = st.number_input(
+            "top padding",
+            key="rail_slot_top_padding",
+            help='Padding of the slots from the top',
+            min_value=0.25, 
+            max_value=300.00, 
+            value=6.0,
+            step=1.0
+        )
 
 
-    #col1, col2, col3 = st.columns(3)    
-    #with col1:
-    #    rail_chamfer = st.number_input(
-    #        "chamfer",
-    #        key="rail_chamfer",
-    ##        help='Chamfer of the rails',
-    #        min_value=0.0, 
-    #        max_value=200.0, 
-    #        value=28.0,
-    #        step=1.0
-    #    )
+
+    col1, col2, col3 = st.columns(3) 
+    with col1:
+        rail_slot_length_offset = st.number_input(
+            "length offset",
+            key="rail_slot_length_offset",
+            help='Distance between each slot',
+            min_value=0.0, 
+            max_value=200.0, 
+            value=12.0,
+            step=1.0
+        )  
+    with col2:
+        rail_slots_end_margin = st.number_input(
+            "end margin",
+            key="rail_slots_end_margin",
+            help='Margin from the ends',
+            min_value=0.0, 
+            max_value=200.0, 
+            value=15.0,
+            step=1.0
+        )
+    with col3:
+        rail_slot_pointed_inner_height = st.number_input(
+            "pointed inner height",
+            key="rail_slot_pointed_inner_height",
+            help='Height of the points',
+            min_value=0.0, 
+            max_value=200.0, 
+            value=7.0,
+            step=1.0
+        )
 
     return {
         'render_rails_slots':render_rails_slots,
+        'rail_slot_length':rail_slot_length,
+        'rail_slot_top_padding':rail_slot_top_padding,
+        'rail_slot_length_offset':rail_slot_length_offset,
+        'rail_slots_end_margin':rail_slots_end_margin,
+        'rail_slot_pointed_inner_height':rail_slot_pointed_inner_height,
+        "rail_slot_type":rail_slot_type
         #'rail_width':rail_width,
         #'rail_height':rail_height,
         #'rail_chamfer':rail_chamfer,
