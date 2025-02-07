@@ -20,7 +20,7 @@ def make_sidebar():
         st.markdown(
 '''
 * ![](https://miniforall.com/image/patreon_16x16.png) [Patreon](https://www.patreon.com/medicationforall)
-* 💡 [This Apps Code](https://github.com/medicationforall/walkwayterrainapp)
+* 💡 [This Apps Code](https://github.com/medicationforall/walkwaygeneratorapp)
 * 📃 [Walkway Documentation](https://github.com/medicationforall/cqterrain/blob/main/documentation/walkway.md)
 * 🖥️ [cqterrain](https://github.com/medicationforall/cqterrain)
 * ![](https://miniforall.com/image/favicon-16x16.png) [Mini For All](https://miniforall.com)
